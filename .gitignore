@@ -1,0 +1,16 @@
+
+*.iml
+
+.idea/encodings.xml
+
+.idea/misc.xml
+
+.idea/modules.xml
+
+.idea/thriftCompiler.xml
+
+.idea/vcs.xml
+
+.idea/workspace.xml
+
+.idea/libraries/commons_collections_3_2.xml

@@ -1,6 +1,5 @@
 package dataCell;
 
-
 public class SentenceToken implements Comparable<SentenceToken>{
     //词在句子从的起点位置
     private int start;
@@ -55,16 +54,14 @@ public class SentenceToken implements Comparable<SentenceToken>{
 
     @Override
     public int compareTo(SentenceToken o) {
-        //end在后面的排在前面
-        if(this.end<o.getEnd()){
-            return 1;
-        }
         //start在前面的排在前面
-        if(this.start<o.getStart()){
-            return 1;
+        if(this.start != o.getStart()){
+            return this.start - o.getStart();
         }
-        return 0;
+        //end在后面的排在前面
+        return o.getEnd() - this.end;
     }
+
     @Override
     public boolean equals(Object o) {
         try {

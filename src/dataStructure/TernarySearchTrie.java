@@ -16,13 +16,16 @@ import dataCell.WordEntity;
 
 public class TernarySearchTrie {
 
-    /*
-     * private static TernarySearchTrie ternarySearchTrie;
-     * 
-     * public static synchronized TernarySearchTrie getInstance(){ if(null ==
-     * ternarySearchTrie){ ternarySearchTrie = new TernarySearchTrie(); } return
-     * ternarySearchTrie; }
-     */
+
+      private static TernarySearchTrie ternarySearchTrie;
+
+//      public static synchronized TernarySearchTrie getInstance(){
+//        if(null == ternarySearchTrie) {
+//            ternarySearchTrie = new TernarySearchTrie();
+//        }
+//        return ternarySearchTrie;
+//      }
+
 
     // 根结点
     private static TernaryTrieNode rootNode = null;
@@ -34,11 +37,11 @@ public class TernarySearchTrie {
     }
     private static String  dicDir = "./dic/";
     private static String binDic = "coreDict.txt"; 
-/*    static{
+    static{
         dicDir = "./dic/";
         binDic = "coreDict.txt"; 
         create();
-    }*/
+    }
     // 增加词
     public static void addWord(WordEntity entity) {
         if (null == entity || null == entity.getWord()
@@ -222,20 +225,21 @@ public class TernarySearchTrie {
             int currentLength = wordLength - offset;
             int index = 0;
             while (true) {
-                if(index == 0 && isEnglish( words[offset + index])) {
-                	WordEntity e = new WordEntity();
-                	e.setFre(0);
-                	e.setLogProb(0-Math.log(wordSum));
-                	e.setPos("");
-                	e.setWord(sentence.substring(offset, offset+1));
-                	entity.addWord(offset, offset + index,
-                            e);
-                	break;
-                }
+//                if(index == 0 && isEnglish( words[offset + index])) {
+//                	WordEntity e = new WordEntity();
+//                	e.setFre(0);
+//                	e.setLogProb(0-Math.log(wordSum));
+//                	e.setPos("");
+//                	e.setWord(sentence.substring(offset, offset+1));
+//                	entity.addWord(offset, offset + index,
+//                            e);
+//                	break;
+//                }
                 int diff = words[offset + index] - currentNode.getPointChar();
                 if (diff == 0) {
                     index++;
-                	if(null == currentNode.getEntity()&& index == 1) {
+                        if(null == currentNode.getEntity() && index == 1 && !isEnglish(words[offset]) && !isNum(words[offset])) {
+                        //if(null == currentNode.getEntity()&& index == 1) {
                 		WordEntity e = new WordEntity();
                     	e.setFre(0);
                     	e.setLogProb(0-Math.log(wordSum));

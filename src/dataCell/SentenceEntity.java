@@ -1,15 +1,19 @@
 package dataCell;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import dataStructure.TernarySearchTrie;
+
 //存放一个句子在词典里面可以找到的全部词
 public class SentenceEntity {
- 
+
     private TokenSet[] tokenSet;
-    
+    private String sentence;
     public SentenceEntity(String sentence){
-        tokenSet= new TokenSet[sentence.length()+2];         
+        this.sentence = sentence;
+        tokenSet= new TokenSet[sentence.length()+2];
         WordEntity startentity = new WordEntity();
         startentity.setFre(1);
         startentity.setWord("thisisstartnode");
@@ -17,8 +21,8 @@ public class SentenceEntity {
         startnode.setEntity(startentity);
         startnode.setStart(-1);
         startnode.setEnd(0);
-        tokenSet[0]= new TokenSet(); 
-        tokenSet[0].addToken(startnode);        
+        tokenSet[0]= new TokenSet();
+        tokenSet[0].addToken(startnode);
         WordEntity endentity = new WordEntity();
         endentity.setFre(1);
         endentity.setWord("thisisendnode");
@@ -27,9 +31,9 @@ public class SentenceEntity {
         endnode.setStart(sentence.length());
         endnode.setEnd(sentence.length()+1);
         tokenSet[sentence.length()+1]= new TokenSet();
-        tokenSet[sentence.length()+1].addToken(endnode);                
+        tokenSet[sentence.length()+1].addToken(endnode);
     }
-    
+
     private List<SentenceToken> tokenList = new ArrayList<SentenceToken>();
     //向句子里面加一个词
     public boolean addWord(int start,int end,WordEntity entity) {
@@ -40,7 +44,7 @@ public class SentenceEntity {
             node.setEnd(end);
             tokenList.add(node);
             if(tokenSet[end] == null){
-                TokenSet set = new TokenSet(); 
+                TokenSet set = new TokenSet();
                 tokenSet[end]=set;
             }
             tokenSet[end].addToken(node);
@@ -50,16 +54,17 @@ public class SentenceEntity {
     }
     //获取句子中在词典里面全部能够找到的词。
     public List<SentenceToken> getSentenceToken() {
+        Collections.sort(tokenList);
         return tokenList;
     }
     public class TokenSet implements Iterable<SentenceToken>{
         int index=0;
         int length=0;
         List<SentenceToken> list = new ArrayList<SentenceToken>();
-        public void addToken(SentenceToken token){            
+        public void addToken(SentenceToken token){
             list.add(token);
             length++;
-        }       
+        }
         @Override
         public Iterator<SentenceToken> iterator() {
             return new Iterator<SentenceToken>(){
@@ -68,28 +73,31 @@ public class SentenceEntity {
                     index++;
                     boolean result=index<=length;
                     if(!result){
-                        index=0;  
+                        index=0;
                     }
                     return result;
                 }
                 @Override
-                public dataCell.SentenceToken next() {
+                public SentenceToken next() {
                     return list.get(index-1);
                 }
                 @Override
-                public void remove() {                   
-                }                
+                public void remove() {
+                }
             };
         }
     }
     public TokenSet[] getTokenSet() {
-/*    	for(int i=0;i<tokenSet.length;i++) {
-    		if(null == tokenSet[i]) {
-    			TokenSet ts = new TokenSet();
-    			SentenceToken token = new SentenceToken();
-    			ts.addToken(token);
-    		}
-    	}*/
+        for(int i=0;i<tokenSet.length;i++) {
+            if(null == tokenSet[i] && i > 0) {
+                WordEntity word = new WordEntity();
+                word.setPos("unknow");
+                word.setFre(0);
+                word.setLogProb(0-Math.log(TernarySearchTrie.getWordSum()));
+                word.setWord(sentence.substring(i-1, i));
+                this.addWord(i-1, i, word) ;
+            }
+        }
         return tokenSet;
-    } 
+    }
 }
