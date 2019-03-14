@@ -1,16 +1,22 @@
 package dataCell;
 
+import dataStructure.Matcher;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import dataStructure.TernarySearchTrie;
+//import dataStructure.TernarySearchTrie;
 
 //存放一个句子在词典里面可以找到的全部词
 public class SentenceEntity {
 
     private TokenSet[] tokenSet;
     private String sentence;
+    private int wordSum = 300000;
+    public void setWordSum(int wordSum){
+        this.wordSum = wordSum;
+    }
     public SentenceEntity(String sentence){
         this.sentence = sentence;
         tokenSet= new TokenSet[sentence.length()+2];
@@ -34,7 +40,7 @@ public class SentenceEntity {
         tokenSet[sentence.length()+1].addToken(endnode);
     }
 
-    private List<SentenceToken> tokenList = new ArrayList<SentenceToken>();
+    private List<SentenceToken> tokenList = new ArrayList<>();
     //向句子里面加一个词
     public boolean addWord(int start,int end,WordEntity entity) {
         if (!tokenList.contains(entity)) {
@@ -60,7 +66,7 @@ public class SentenceEntity {
     public class TokenSet implements Iterable<SentenceToken>{
         int index=0;
         int length=0;
-        List<SentenceToken> list = new ArrayList<SentenceToken>();
+        List<SentenceToken> list = new ArrayList<>();
         public void addToken(SentenceToken token){
             list.add(token);
             length++;
@@ -93,7 +99,7 @@ public class SentenceEntity {
                 WordEntity word = new WordEntity();
                 word.setPos("unknow");
                 word.setFre(0);
-                word.setLogProb(0-Math.log(TernarySearchTrie.getWordSum()));
+                word.setLogProb(0-Math.log(wordSum));
                 word.setWord(sentence.substring(i-1, i));
                 this.addWord(i-1, i, word) ;
             }
