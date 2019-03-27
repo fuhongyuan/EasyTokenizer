@@ -72,8 +72,6 @@ public abstract class Matcher {
             int index=0;
             while(offset+index<wordLength&&isPattern.test(words[offset+index])){
                 index++;
-            }
-            if(index>1){
                 WordEntity word = defaultWordEntity();
                 word.setPos(pos);
                 word.setWord(sentence.substring(offset, offset+index));
